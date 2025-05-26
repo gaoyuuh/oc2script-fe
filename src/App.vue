@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { RouterView } from 'vue-router'
 </script>
 
 <template>
@@ -9,7 +8,9 @@ import HelloWorld from './components/HelloWorld.vue'
 
 <style>
 /* 全局样式，确保内容铺满整个屏幕 */
-html, body, #app {
+html,
+body,
+#app {
   width: 100%;
   height: 100%;
   margin: 0;

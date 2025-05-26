@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Convertor from '../views/Convertor.vue'
+import CodeConvertor from '../views/CodeConvertor.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,12 +7,12 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: Convertor,
+      component: CodeConvertor,
     },
     {
       path: '/convert',
       name: 'convert',
-      component: () => import('../views/Convertor.vue'),
+      component: () => import('../views/CodeConvertor.vue'),
     },
   ],
 })
