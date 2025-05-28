@@ -17,19 +17,7 @@
           <button class="close-btn" @click="closeHelp">×</button>
         </div>
         <div class="help-body">
-          <div class="unsupported-list">
-            <div v-for="category in helpData.categories" :key="category.id" class="category">
-              <h3>{{ category.title }}</h3>
-              <ul>
-                <li v-for="item in category.items" :key="item.id">
-                  <div class="item-text">{{ item.text }}</div>
-                  <div v-if="item.description" class="item-description">
-                    {{ item.description }}
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
+          <div class="markdown-content" v-html="parseMarkdown(helpData.content)"></div>
         </div>
       </div>
     </div>
@@ -38,9 +26,21 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { marked } from 'marked'
 import { helpData } from '@/data/helpData'
 
 const showHelp = ref(false)
+
+// 配置 marked
+marked.setOptions({
+  breaks: true,
+  gfm: true,
+})
+
+// 解析 Markdown
+function parseMarkdown(markdown: string): string {
+  return marked(markdown.trim()) as string
+}
 
 // 帮助抽屉控制
 function toggleHelp() {
@@ -144,7 +144,7 @@ function closeHelp() {
   position: absolute;
   top: 0;
   right: 0;
-  width: 400px;
+  width: 500px;
   height: 100%;
   background: linear-gradient(135deg, #2a2a2a, #1e1e1e);
   box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
@@ -193,62 +193,176 @@ function closeHelp() {
   padding: 20px;
 }
 
-.unsupported-list {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+.markdown-content {
+  color: #cccccc;
+  line-height: 1.6;
+  font-size: 0.8rem;
 }
 
-.category h3 {
-  margin: 0 0 12px 0;
-  color: #ffffff;
+/* Markdown 标题样式 */
+.markdown-content :deep(h1) {
+  color: #ff8a80;
   font-size: 1.1rem;
   font-weight: 600;
+  margin: 24px 0 16px 0;
+  padding-bottom: 8px;
   border-bottom: 2px solid #4a4a4a;
+}
+
+.markdown-content :deep(h2) {
+  color: #ffab91;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 20px 0 12px 0;
   padding-bottom: 6px;
+  border-bottom: 1px solid #555555;
 }
 
-.category ul {
-  margin: 0;
-  padding-left: 0;
-  list-style: none;
+.markdown-content :deep(h3) {
+  color: #ffcc9c;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 16px 0 8px 0;
 }
 
-.category li {
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  position: relative;
-  padding-left: 20px;
-}
-
-.category li:before {
-  content: '•';
-  color: #ff6b6b;
-  font-weight: bold;
-  position: absolute;
-  left: 0;
-  top: 8px;
-}
-
-.item-text {
-  color: #cccccc;
-  font-size: 0.95rem;
-  line-height: 1.4;
-  white-space: pre-line;
-}
-
-.item-description {
-  margin-top: 6px;
-  color: #999999;
+.markdown-content :deep(h4),
+.markdown-content :deep(h5),
+.markdown-content :deep(h6) {
+  color: #ffd7cc;
+  font-weight: 600;
+  margin: 12px 0 6px 0;
   font-size: 0.85rem;
-  line-height: 1.3;
-  font-style: italic;
-  padding-left: 8px;
-  border-left: 2px solid #555555;
-  white-space: pre-line;
 }
 
-.category li:last-child {
-  border-bottom: none;
+/* 段落样式 */
+.markdown-content :deep(p) {
+  margin: 8px 0;
+  color: #cccccc;
+  font-size: 0.8rem;
+}
+
+/* 代码样式 */
+.markdown-content :deep(code) {
+  background-color: #2d2d2d;
+  color: #f8f8f2;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 0.75rem;
+}
+
+.markdown-content :deep(pre) {
+  background-color: #1e1e1e;
+  color: #f8f8f2;
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 12px 0;
+  border: 1px solid #3a3a3a;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 0.75rem;
+}
+
+.markdown-content :deep(pre code) {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* 引用样式 */
+.markdown-content :deep(blockquote) {
+  margin: 12px 0;
+  padding: 12px 16px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-left: 4px solid #666666;
+  color: #bbbbbb;
+  border-radius: 0 4px 4px 0;
+  font-size: 0.8rem;
+}
+
+.markdown-content :deep(blockquote p) {
+  margin: 0;
+  color: #bbbbbb;
+  font-size: 0.8rem;
+}
+
+/* 强调样式 */
+.markdown-content :deep(strong) {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.markdown-content :deep(em) {
+  color: #dddddd;
+  font-style: italic;
+}
+
+/* 列表样式 */
+.markdown-content :deep(ul),
+.markdown-content :deep(ol) {
+  margin: 12px 0;
+  padding-left: 24px;
+  font-size: 0.8rem;
+}
+
+.markdown-content :deep(li) {
+  margin: 6px 0;
+  color: #cccccc;
+  line-height: 1.5;
+  font-size: 0.8rem;
+}
+
+.markdown-content :deep(ul li) {
+  list-style-type: disc;
+}
+
+.markdown-content :deep(ol li) {
+  list-style-type: decimal;
+}
+
+/* 链接样式 */
+.markdown-content :deep(a) {
+  color: #66b3ff;
+  text-decoration: none;
+}
+
+.markdown-content :deep(a:hover) {
+  color: #99ccff;
+  text-decoration: underline;
+}
+
+/* 分隔线样式 */
+.markdown-content :deep(hr) {
+  border: none;
+  border-top: 1px solid #555555;
+  margin: 20px 0;
+}
+
+/* 表格样式 */
+.markdown-content :deep(table) {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+  font-size: 0.8rem;
+}
+
+.markdown-content :deep(th),
+.markdown-content :deep(td) {
+  border: 1px solid #555555;
+  padding: 8px 12px;
+  text-align: left;
+  font-size: 0.8rem;
+}
+
+.markdown-content :deep(th) {
+  background-color: #2d2d2d;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.markdown-content :deep(td) {
+  background-color: #1e1e1e;
+  color: #cccccc;
 }
 </style>
