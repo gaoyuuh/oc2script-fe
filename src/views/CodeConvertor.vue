@@ -1,9 +1,5 @@
 <template>
   <div class="code-convertor">
-    <div class="header">
-      <h1>OC2Script 转换器</h1>
-    </div>
-
     <div class="main-content">
       <div class="editor-container">
         <div class="editor-header">Objective-C</div>
@@ -38,12 +34,16 @@
         {{ isLoading ? '转换中...' : 'Convert' }}
       </button>
     </div>
+
+    <!-- 帮助组件 -->
+    <HelpDrawer />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import MonacoEditor from '@/components/MonacoEditor.vue'
+import HelpDrawer from '@/components/HelpDrawer.vue'
 
 // 定义API响应接口
 interface ApiResponse {
@@ -124,28 +124,15 @@ async function convertCode() {
   width: 100%;
   background: linear-gradient(135deg, #1a1a1a, #2d2d2d, #1e1e1e);
   color: white;
-}
-
-.header {
-  padding: 20px 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-h1 {
-  font-size: 2rem;
-  font-weight: 300;
-  margin: 0;
-  color: #f0f0f0;
+  position: relative;
 }
 
 .main-content {
   display: flex;
   flex: 1;
-  padding: 0 30px;
+  padding: 20px;
   gap: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .editor-container {
@@ -214,10 +201,10 @@ h1 {
 }
 
 .footer {
-  padding: 20px 0;
+  padding: 15px 0;
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .convert-btn {
