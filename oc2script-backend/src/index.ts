@@ -7,7 +7,7 @@ import * as fs from 'fs'
 import * as os from 'os'
 
 const app = express()
-const port = process.env.PORT || 3000
+const port = Number(process.env.PORT) || 3000
 
 // 定义响应接口
 interface ApiResponse {
@@ -144,6 +144,27 @@ app.post('/convert', async (req, res) => {
 })
 
 // 启动服务器
-app.listen(port, () => {
-  console.log(`服务器运行在 http://localhost:${port}`)
+app.listen(port, '0.0.0.0', () => {
+  // 获取本机IP地址
+  const interfaces = os.networkInterfaces()
+  let localIP = 'localhost'
+
+  for (const name of Object.keys(interfaces)) {
+    const interfaceGroup = interfaces[name]
+    if (interfaceGroup) {
+      for (const netInterface of interfaceGroup) {
+        if (netInterface.family === 'IPv4' && !netInterface.internal) {
+          localIP = netInterface.address
+          break
+        }
+      }
+      if (localIP !== 'localhost') break
+    }
+  }
+
+  console.log('🚀 后端服务器已启动！')
+  console.log(`📱 本地访问: http://localhost:${port}`)
+  console.log(`🌐 局域网访问: http://${localIP}:${port}`)
+  console.log(`📋 API接口: http://${localIP}:${port}/convert`)
+  console.log('按 Ctrl+C 停止服务器')
 })

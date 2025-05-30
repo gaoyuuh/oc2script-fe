@@ -10,13 +10,20 @@ export const helpData: HelpConfig = {
   content: `
 # 不支持自动转换的情况:
 
-## 1. 调用原始方式需自己添加代码
+## 1. 不支持宏定义，需要手动在 oc 中展开
+遇到解析失败，查看代码中是否存在宏定义
+\`\`\`objective-c
+// 例如：
+kHexColor(#F4F4F6);
+// 需要手动转换为
+[UIColor colorWithHex:@"#F4F4F6"];
+\`\`\`
+
+## 2. 调用原始方式需自己添加代码
 
 \`\`\`javascript
 self.kzc__original__原方法名(参数...);
 \`\`\`
-
-## 2. 不支持宏定义，需要手动在 oc 中展开
 
 ## 3. 不识别的下标语法
 
