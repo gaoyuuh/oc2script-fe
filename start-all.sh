@@ -1,11 +1,34 @@
 #!/bin/bash
 
+# 设置脚本的工作目录为脚本所在目录
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
+cd "$SCRIPT_DIR" || exit
+
+# 设置环境变量，添加常见的 Node.js 安装路径
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+
+# 检查必要的命令是否存在
+check_command() {
+    if ! command -v "$1" &> /dev/null; then
+        echo "❌ 错误: 找不到命令 '$1'"
+        echo "请确保已正确安装 Node.js 和 npm"
+        echo "或者在终端中运行此脚本: ./start-all.sh"
+        exit 1
+    fi
+}
+
 echo "🚀 正在启动 oc2script 前后端服务..."
+
+# 检查必要的命令
+check_command "node"
+check_command "npm"
+check_command "ifconfig"
 
 # 获取本机IP地址
 LOCAL_IP=$(ifconfig | grep "inet " | grep -v 127.0.0.1 | head -1 | awk '{print $2}')
 
 echo "📡 检测到本机IP地址: $LOCAL_IP"
+echo "📁 工作目录: $SCRIPT_DIR"
 
 # 停止已存在的服务
 echo "🛑 检查并停止已存在的服务..."
@@ -17,11 +40,11 @@ sleep 1
 
 # 启动后端服务
 echo "🔧 启动后端服务 (端口 3000)..."
-cd oc2script-backend || exit
+cd "$SCRIPT_DIR/oc2script-backend" || exit
 npm run build > /dev/null 2>&1
 node dist/index.js &
 BACKEND_PID=$!
-cd ..
+cd "$SCRIPT_DIR" || exit
 
 # 等待后端启动
 sleep 2

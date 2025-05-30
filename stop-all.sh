@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# 设置脚本的工作目录为脚本所在目录
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
+cd "$SCRIPT_DIR" || exit
+
+# 设置环境变量，添加常见的命令路径
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+
 echo "🛑 正在停止 oc2script 服务..."
 
 # 停止前端服务
