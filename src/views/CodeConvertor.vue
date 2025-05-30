@@ -81,8 +81,13 @@ async function convertCode() {
   hasError.value = false // 重置错误状态
 
   try {
+    // 动态获取服务器地址
+    const serverHost = window.location.hostname
+    const serverPort = '3000'
+    const apiUrl = `http://${serverHost}:${serverPort}/convert`
+
     // 调用后端API
-    const response = await fetch('http://localhost:3000/convert', {
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
