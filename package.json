@@ -12,7 +12,11 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "server": "node serve.cjs",
+    "start-all": "./start-all.sh",
+    "stop-all": "./stop-all.sh",
+    "restart": "./stop-all.sh && ./start-all.sh"
   },
   "dependencies": {
     "@monaco-editor/loader": "^1.5.0",
